@@ -8,6 +8,9 @@
 <link rel="stylesheet" href="assets/bli-design/colors_and_type.css">
 <style>
   /* Layout chrome built from bli tokens only — no new colors invented. */
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  section[id] { scroll-margin-top: 18px; }
   body { padding: 40px 20px 96px; }
   .shell { max-width: 880px; margin: 0 auto; }
 
@@ -76,20 +79,15 @@
   .badges { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 20px; }
 
   /* ── decision diagram ── */
-  .flow { border: 1px solid var(--bli-border); border-radius: var(--radius); overflow: hidden; margin: 20px 0 6px; }
-  .flow .q {
-    padding: 14px 18px; background: var(--bli-surface-2); border-bottom: 1px solid var(--bli-border);
-    font-family: var(--font-code); font-size: 13px; color: var(--bli-text);
-  }
-  .flow .q b { color: var(--bli-cta); }
-  .branches { display: grid; grid-template-columns: 1fr 1fr; }
-  .branch { padding: 18px 20px; background: var(--bli-surface); }
-  .branch + .branch { border-left: 1px solid var(--bli-border); }
-  .branch .tool { font-family: var(--font-code); font-size: 12px; color: var(--bli-muted); }
-  .branch .down { color: var(--bli-cta); font-family: var(--font-code); margin: 8px 0; font-size: 13px; }
-  .branch .dest { font-family: var(--font-sans); font-size: 15px; color: var(--bli-text); }
-  .branch .sub { font-family: var(--font-serif); font-size: 13px; color: var(--bli-muted); margin-top: 4px; }
-  @media (max-width: 560px) { .branches { grid-template-columns: 1fr; } .branch + .branch { border-left: 0; border-top: 1px solid var(--bli-border); } }
+  /* three path cards, each a button that jumps to its section */
+  .paths { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 20px 0 6px; }
+  .path { display: flex; flex-direction: column; background: var(--bli-surface); border: 1px solid var(--bli-border); border-radius: var(--radius); padding: 16px 16px 18px; }
+  .path .bli-eyebrow { color: var(--bli-cta); }
+  .path h3 { font-size: var(--text-base); margin: 8px 0 6px; color: var(--bli-text); }
+  .path p { font-family: var(--font-serif); font-size: 13px; line-height: 1.55; color: var(--bli-muted); margin: 0 0 16px; }
+  .path .bli-btn { margin-top: auto; align-self: flex-start; }
+  .path .bli-btn, .path .bli-btn > span { border-radius: 0; }
+  @media (max-width: 620px) { .paths { grid-template-columns: 1fr; } }
 
   /* ── numbered steps ── */
   .step { display: grid; grid-template-columns: 30px 1fr; gap: 16px; }
@@ -198,25 +196,28 @@
     <!-- decision -->
     <section>
       <div class="bli-eyebrow">01 / which path is yours</div>
-      <h2>Two questions, then go</h2>
-      <div class="flow">
-        <div class="q"><b>Q.</b> Which agent are you setting up?</div>
-        <div class="branches">
-          <div class="branch">
-            <div class="tool">▸ Claude Code</div>
-            <div class="down">│<br>▼</div>
-            <div class="dest">Path A — marketplace</div>
-            <div class="sub">native <code>/plugin</code> install, or use path B</div>
-          </div>
-          <div class="branch">
-            <div class="tool">▸ Codex / any spec-compatible agent</div>
-            <div class="down">│<br>▼</div>
-            <div class="dest">Path B — git + install.sh</div>
-            <div class="sub">clone and copy, or path C by hand</div>
-          </div>
+      <h2>Pick your path</h2>
+      <div class="paths">
+        <div class="path">
+          <div class="bli-eyebrow">Path A</div>
+          <h3>Claude Code</h3>
+          <p>Native <code>/plugin</code> marketplace install. Auto-updates from GitHub.</p>
+          <a class="bli-btn" href="#install"><span>Claude Code &#8595;</span></a>
+        </div>
+        <div class="path">
+          <div class="bli-eyebrow">Path B</div>
+          <h3>Codex / spec-compatible agent</h3>
+          <p>Clone the repo and run <code>install.sh</code> to copy skills in.</p>
+          <a class="bli-btn" href="#path-b"><span>git + install.sh &#8595;</span></a>
+        </div>
+        <div class="path">
+          <div class="bli-eyebrow">Path C</div>
+          <h3>By hand</h3>
+          <p>No script — copy a single skill folder yourself.</p>
+          <a class="bli-btn secondary" href="#path-c"><span>Manual copy &#8595;</span></a>
         </div>
       </div>
-      <p class="bli-muted" style="font-family:var(--font-code); font-size:12px; margin-top:14px;">Every path is pure GitHub + git. None of them download or execute an npm package.</p>
+      <p class="bli-muted" style="font-family:var(--font-code); font-size:12px; margin-top:16px;">Every path is pure GitHub + git. None of them download or execute an npm package.</p>
     </section>
 
     <!-- prereqs -->
@@ -251,7 +252,7 @@
         <div class="num">2</div>
         <div class="work">
           <h3>Install the plugin</h3>
-          <p>The repo ships as a single plugin named <code>brandt-skills</code> in a marketplace named <code>brandt</code>. Installing it brings in all five skills at once.</p>
+          <p>The repo ships as a single plugin named <code>brandt-skills</code> in a marketplace named <code>brandt</code>. Installing it brings in every skill at once.</p>
           <div class="code">
             <div class="code-head"><span class="lbl">in Claude Code</span><button class="copy" data-copy="/plugin install brandt-skills@brandt">copy</button></div>
             <pre class="block"><span class="kw">/plugin install</span> brandt-skills@brandt</pre>
@@ -275,7 +276,7 @@
     </section>
 
     <!-- path B -->
-    <section>
+    <section id="path-b">
       <div class="bli-eyebrow">Path B / git clone + install.sh</div>
       <h2>Cross-tool — works for Codex and for Claude</h2>
 
@@ -327,7 +328,7 @@ DEST=~/.claude/skills ./install.sh    # Claude Code">copy</button></div>
     </section>
 
     <!-- path C -->
-    <section>
+    <section id="path-c">
       <div class="bli-eyebrow">Path C / by hand</div>
       <h2>No script — just a copy</h2>
       <p>If you'd rather not run a script at all, copy any single skill folder into your agent's skills directory. This is the most transparent option — you can read every file first.</p>
@@ -357,7 +358,7 @@ DEST=~/.claude/skills ./install.sh    # Claude Code">copy</button></div>
     <!-- skills -->
     <section id="skills">
       <div class="bli-eyebrow">04 / what's in the box</div>
-      <h2>Five skills</h2>
+      <h2>The skills</h2>
       <table>
         <tr><th>Skill</th><th>What it does</th></tr>
         <tr><td class="k">prepare-release</td><td>Cut a release from pending changesets — version preview, changelog, archived notes, tag / GitHub Release steps.</td></tr>

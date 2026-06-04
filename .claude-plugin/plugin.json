@@ -1,6 +1,6 @@
 {
   "name": "brandt-skills",
-  "description": "Brandt's authored and customized Claude Code skills: prepare-release, write-change-set, write-commit, uat, and resurrect-project.",
+  "description": "Brandt's authored and customized agent skills for release, changeset, commit, UAT, and project-resurrection workflows.",
   "version": "0.1.0",
   "author": {
     "name": "Brandt",
