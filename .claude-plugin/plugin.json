@@ -1,0 +1,13 @@
+{
+  "name": "brandt-skills",
+  "description": "Brandt's authored and customized Claude Code skills: prepare-release, write-change-set, write-commit, uat, and resurrect-project.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Brandt",
+    "email": "motobrandt@gmail.com"
+  },
+  "homepage": "https://github.com/brandtam/skills",
+  "repository": "https://github.com/brandtam/skills",
+  "license": "MIT",
+  "keywords": ["skills", "release", "changeset", "commit", "uat"]
+}

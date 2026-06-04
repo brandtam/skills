@@ -1,0 +1,16 @@
+{
+  "name": "brandt",
+  "owner": {
+    "name": "Brandt",
+    "email": "motobrandt@gmail.com"
+  },
+  "description": "Brandt's personal collection of authored and customized Claude Code skills.",
+  "plugins": [
+    {
+      "name": "brandt-skills",
+      "source": ".",
+      "description": "Release, changeset, commit, UAT, and project-resurrection skills.",
+      "version": "0.1.0"
+    }
+  ]
+}

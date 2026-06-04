@@ -1,0 +1,36 @@
+name: validate
+
+# Validate every skill against the Agent Skills spec (https://agentskills.io)
+# on each push and pull request. Python-only — no npm in this pipeline.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  skills-ref:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install skills-ref
+        run: pip install "git+https://github.com/agentskills/agentskills.git#subdirectory=skills-ref"
+
+      - name: Validate skills
+        run: |
+          fail=0
+          for dir in skills/*/; do
+            name="$(basename "$dir")"
+            if skills-ref validate "$dir"; then
+              echo "ok: $name"
+            else
+              echo "FAIL: $name"
+              fail=1
+            fi
+          done
+          exit $fail
