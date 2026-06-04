@@ -12,7 +12,7 @@ An illustrated walkthrough is published at **[brandtam.github.io/skills](https:/
 
 ```
 /plugin marketplace add brandtam/skills
-/plugin install brandt-skills@brandt
+/plugin install brandtam-skills@brandtam
 ```
 
 ### Git + install.sh

@@ -1,5 +1,5 @@
 {
-  "name": "brandt-skills",
+  "name": "brandtam-skills",
   "description": "Brandt's authored and customized agent skills for release, changeset, commit, UAT, and project-resurrection workflows.",
   "version": "0.1.0",
   "author": {

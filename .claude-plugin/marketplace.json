@@ -1,5 +1,5 @@
 {
-  "name": "brandt",
+  "name": "brandtam",
   "owner": {
     "name": "Brandt",
     "email": "brandt@bli.dev"
@@ -7,7 +7,7 @@
   "description": "Brandt's personal collection of authored and customized Claude Code skills.",
   "plugins": [
     {
-      "name": "brandt-skills",
+      "name": "brandtam-skills",
       "source": ".",
       "description": "Release, changeset, commit, UAT, and project-resurrection skills.",
       "version": "0.1.0"
