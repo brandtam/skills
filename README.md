@@ -4,7 +4,7 @@ Brandt's authored and customized agent skills.
 
 These skills follow the [Agent Skills specification](https://agentskills.io/specification), so any skills-compatible agent — Claude Code, Codex CLI, and others — can use them. Everything installs straight from GitHub: no npm, no third-party installer. Validated in CI with [`skills-ref`](https://github.com/agentskills/agentskills/tree/main/skills-ref).
 
-An illustrated walkthrough lives in [`INSTALL.html`](./INSTALL.html).
+An illustrated walkthrough is published at **[brandtam.github.io/skills](https://brandtam.github.io/skills/INSTALL.html)** (source: [`INSTALL.html`](./INSTALL.html)).
 
 ## Install
 
