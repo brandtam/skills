@@ -9,7 +9,8 @@
 # Usage:
 #   ./install.sh                 # install every skill into ~/.agents/skills
 #   ./install.sh write-commit    # install only the named skill(s)
-#   DEST=~/.claude/skills ./install.sh    # install somewhere else
+#   DEST=~/.codex/skills  ./install.sh    # Codex CLI's skills directory
+#   DEST=~/.claude/skills ./install.sh    # Claude Code's skills directory
 #
 set -euo pipefail
 

@@ -3,375 +3,356 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>skills — install walkthrough</title>
+<title>skills · INSTALL.html</title>
+<!-- bli design system — vendored so this renders on-brand from a fresh clone, offline -->
+<link rel="stylesheet" href="assets/bli-design/colors_and_type.css">
 <style>
-  /* ───────────────────────────────────────────────────────────
-     Self-contained. No external fonts, no CDN, no scripts pulled
-     from anywhere. Fitting for a repo whose whole point is "no
-     third-party install path." Everything below is local.
-     ─────────────────────────────────────────────────────────── */
-  :root{
-    --ink:#15130e;
-    --ink-2:#1d1a13;
-    --panel:#211d16;
-    --panel-2:#272219;
-    --line:#3a3325;
-    --paper:#ece2cf;
-    --paper-dim:#b9ad95;
-    --muted:#8d836d;
-    --amber:#e6a23c;
-    --amber-soft:#f0c074;
-    --green:#8bbf6a;
-    --rust:#cf6a4c;
-    --mono: ui-monospace, "SF Mono", "JetBrains Mono", "Menlo", "Consolas", monospace;
-    --serif: "Iowan Old Style", "Palatino Linotype", "Palatino", "Georgia", serif;
-  }
-  *{box-sizing:border-box;}
-  html{scroll-behavior:smooth;}
-  body{
-    margin:0;
-    background:
-      radial-gradient(1200px 600px at 80% -10%, rgba(230,162,60,.10), transparent 60%),
-      radial-gradient(900px 500px at -10% 20%, rgba(139,191,106,.06), transparent 55%),
-      var(--ink);
-    color:var(--paper);
-    font-family:var(--serif);
-    font-size:18px;
-    line-height:1.7;
-    -webkit-font-smoothing:antialiased;
-  }
-  /* film grain */
-  body::before{
-    content:"";
-    position:fixed; inset:0; z-index:1; pointer-events:none; opacity:.04;
-    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  }
-  .wrap{position:relative; z-index:2; max-width:880px; margin:0 auto; padding:0 28px 120px;}
+  /* Layout chrome built from bli tokens only — no new colors invented. */
+  body { padding: 40px 20px 96px; }
+  .shell { max-width: 880px; margin: 0 auto; }
 
-  /* labels / mono */
-  .kicker{font-family:var(--mono); font-size:12px; letter-spacing:.32em; text-transform:uppercase; color:var(--amber); }
-  .mono{font-family:var(--mono);}
+  /* ── OS window framing (the signature bli retro-OS chrome) ── */
+  .window {
+    background: var(--bli-surface);
+    border: 1px solid var(--bli-border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .titlebar {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 10px 8px 14px;
+    background: var(--bli-surface-2);
+    border-bottom: 1px solid var(--bli-border);
+    font-family: var(--font-code); font-size: 12px; color: var(--bli-text);
+  }
+  .titlebar .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--bli-cta); flex-shrink: 0; }
+  .titlebar .fname { white-space: nowrap; }
+  .controls { display: inline-flex; gap: 5px; margin-left: auto; }
+  .controls span {
+    width: 18px; height: 18px; display: inline-flex; align-items: center; justify-content: center;
+    background: var(--bli-surface); border: 1px solid var(--bli-border); border-radius: var(--radius-xs);
+    color: var(--bli-muted); font-family: var(--font-code); font-size: 11px; line-height: 1;
+  }
+  /* menubar doubles as section nav */
+  .menubar {
+    display: flex; align-items: center; gap: 2px; flex-wrap: wrap;
+    padding: 5px 10px; background: var(--bli-bg);
+    border-bottom: 1px solid var(--bli-border);
+    font-family: var(--font-code); font-size: 12px;
+  }
+  .menubar a { padding: 2px 9px; border-radius: var(--radius-sm); color: var(--bli-muted); text-decoration: none; }
+  .menubar a:hover { background: var(--bli-surface-2); color: var(--bli-text); }
+  .menubar .kbd { margin-left: auto; color: var(--bli-subtle); border: 1px solid var(--bli-border); border-radius: var(--radius-xs); padding: 1px 6px; font-size: 11px; }
+
+  .pane { background: var(--bli-bg); padding: 0 30px; }
+
+  /* ── prose ── */
+  .pane p { font-family: var(--font-serif); color: var(--bli-text); font-size: 15px; line-height: 1.7; max-width: 66ch; }
+  .pane p.lede { font-size: 19px; line-height: 1.55; color: var(--bli-text); max-width: 40ch; margin: 6px 0 0; }
+  section { padding: 30px 0; border-bottom: 1px solid var(--bli-border); }
+  section:last-child { border-bottom: 0; }
+  .pane h2 { font-size: var(--text-2xl); margin: 6px 0 14px; }
+  .pane h3 { font-size: var(--text-base); margin: 18px 0 8px; color: var(--bli-text); }
 
   /* ── header ── */
-  header{padding:88px 0 40px; border-bottom:1px solid var(--line);}
-  h1{
-    font-family:var(--mono); font-weight:700;
-    font-size:clamp(38px,8vw,76px); line-height:.96; letter-spacing:-.02em;
-    margin:.35em 0 .25em;
+  header.hero { padding: 38px 0 28px; border-bottom: 1px solid var(--bli-border); }
+  .wordmark {
+    font-family: var(--font-mono-display); font-weight: 700;
+    font-size: clamp(40px, 9vw, 72px); line-height: 1; letter-spacing: -0.02em;
+    color: var(--bli-text); margin: 10px 0 14px;
   }
-  h1 .slash{color:var(--amber);}
-  .lede{font-size:21px; color:var(--paper-dim); max-width:38ch; margin:0;}
-  .badges{margin-top:28px; display:flex; flex-wrap:wrap; gap:10px;}
-  .badge{
-    font-family:var(--mono); font-size:12.5px; letter-spacing:.04em;
-    border:1px solid var(--line); border-radius:999px; padding:6px 14px;
-    color:var(--paper-dim); background:var(--ink-2);
-  }
-  .badge.no{color:var(--rust); border-color:rgba(207,106,76,.4);}
-  .badge.yes{color:var(--green); border-color:rgba(139,191,106,.4);}
-
-  /* ── sections ── */
-  section{padding:54px 0; border-bottom:1px solid var(--line);}
-  h2{
-    font-family:var(--mono); font-size:13px; letter-spacing:.28em; text-transform:uppercase;
-    color:var(--amber); margin:0 0 6px;
-  }
-  h2 + .h2sub{font-family:var(--mono); font-size:13px; color:var(--muted); margin:0 0 26px; letter-spacing:.04em;}
-  h3{font-family:var(--serif); font-size:26px; margin:0 0 10px; letter-spacing:-.01em;}
-  p{margin:0 0 18px; max-width:64ch;}
-  a{color:var(--amber-soft); text-decoration:none; border-bottom:1px solid rgba(240,192,116,.35);}
-  a:hover{color:#fff;}
-  strong{color:#fff; font-weight:600;}
-  code:not(pre code){
-    font-family:var(--mono); font-size:.86em; background:var(--panel);
-    border:1px solid var(--line); border-radius:5px; padding:1px 6px; color:var(--amber-soft);
-  }
+  .wordmark .slash { color: var(--bli-cta); }
+  .badges { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 20px; }
 
   /* ── decision diagram ── */
-  .flow{
-    display:grid; grid-template-columns:1fr; gap:0; margin:30px 0 8px;
-    border:1px solid var(--line); border-radius:14px; overflow:hidden; background:var(--ink-2);
+  .flow { border: 1px solid var(--bli-border); border-radius: var(--radius); overflow: hidden; margin: 20px 0 6px; }
+  .flow .q {
+    padding: 14px 18px; background: var(--bli-surface-2); border-bottom: 1px solid var(--bli-border);
+    font-family: var(--font-code); font-size: 13px; color: var(--bli-text);
   }
-  .flow-q{
-    padding:20px 24px; font-family:var(--mono); font-size:14px; letter-spacing:.04em;
-    color:var(--paper); background:var(--panel-2); border-bottom:1px solid var(--line);
-  }
-  .flow-q b{color:var(--amber);}
-  .branches{display:grid; grid-template-columns:1fr 1fr; }
-  .branch{padding:22px 24px;}
-  .branch + .branch{border-left:1px solid var(--line);}
-  .branch .tool{font-family:var(--mono); font-size:13px; color:var(--paper-dim); letter-spacing:.04em;}
-  .branch .arrow{color:var(--muted); margin:8px 0; font-family:var(--mono);}
-  .branch .dest{font-family:var(--serif); font-size:19px; color:#fff;}
-  .branch .dest .tag{
-    display:inline-block; font-family:var(--mono); font-size:11px; letter-spacing:.1em;
-    text-transform:uppercase; padding:2px 8px; border-radius:5px; margin-left:8px;
-    background:rgba(230,162,60,.14); color:var(--amber); border:1px solid rgba(230,162,60,.3);
-  }
-  @media(max-width:560px){ .branches{grid-template-columns:1fr;} .branch + .branch{border-left:0; border-top:1px solid var(--line);} }
+  .flow .q b { color: var(--bli-cta); }
+  .branches { display: grid; grid-template-columns: 1fr 1fr; }
+  .branch { padding: 18px 20px; background: var(--bli-surface); }
+  .branch + .branch { border-left: 1px solid var(--bli-border); }
+  .branch .tool { font-family: var(--font-code); font-size: 12px; color: var(--bli-muted); }
+  .branch .down { color: var(--bli-cta); font-family: var(--font-code); margin: 8px 0; font-size: 13px; }
+  .branch .dest { font-family: var(--font-sans); font-size: 15px; color: var(--bli-text); }
+  .branch .sub { font-family: var(--font-serif); font-size: 13px; color: var(--bli-muted); margin-top: 4px; }
+  @media (max-width: 560px) { .branches { grid-template-columns: 1fr; } .branch + .branch { border-left: 0; border-top: 1px solid var(--bli-border); } }
 
-  /* ── steps ── */
-  .step{display:grid; grid-template-columns:44px 1fr; gap:20px; margin:0 0 8px;}
-  .step .num{
-    font-family:var(--mono); font-size:15px; color:var(--ink); font-weight:700;
-    width:34px; height:34px; border-radius:50%; background:var(--amber);
-    display:grid; place-items:center; margin-top:2px;
+  /* ── numbered steps ── */
+  .step { display: grid; grid-template-columns: 30px 1fr; gap: 16px; }
+  .step .num {
+    width: 26px; height: 26px; border-radius: var(--radius-sm); margin-top: 2px;
+    background: var(--bli-accent); border: 1.5px solid var(--bli-edge); color: #1A0A00;
+    font-family: var(--font-code); font-weight: 800; font-size: 13px;
+    display: grid; place-items: center;
+    box-shadow: inset 0 2px 0 rgba(255,255,255,.45), inset 0 -1px 0 rgba(0,0,0,.18);
   }
-  .step .body{padding-bottom:26px; border-left:1px dashed var(--line); margin-left:-30px; padding-left:46px;}
-  .step:last-child .body{border-left:0;}
-  .step .body h4{font-family:var(--serif); font-size:20px; margin:2px 0 8px; color:#fff;}
-  .step .body p{margin:0 0 14px; color:var(--paper-dim);}
+  .step .work { border-left: 1px solid var(--bli-border); margin-left: -17px; padding: 0 0 22px 33px; }
+  .step:last-child .work { border-left: 0; }
+  .step .work h3 { margin-top: 2px; }
 
   /* ── code blocks ── */
-  .code{margin:0 0 16px; border:1px solid var(--line); border-radius:11px; overflow:hidden; background:var(--panel);}
-  .code-head{
-    display:flex; align-items:center; justify-content:space-between;
-    padding:9px 14px; background:var(--panel-2); border-bottom:1px solid var(--line);
-  }
-  .code-head .label{font-family:var(--mono); font-size:11.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted);}
-  .copy{
-    font-family:var(--mono); font-size:11.5px; letter-spacing:.08em; text-transform:uppercase;
-    background:transparent; color:var(--amber); border:1px solid rgba(230,162,60,.35);
-    border-radius:6px; padding:4px 11px; cursor:pointer; transition:all .15s ease;
-  }
-  .copy:hover{background:var(--amber); color:var(--ink);}
-  .copy.done{color:var(--green); border-color:rgba(139,191,106,.5);}
-  pre{margin:0; padding:16px 18px; overflow-x:auto;}
-  pre code{font-family:var(--mono); font-size:14px; line-height:1.65; color:var(--paper); white-space:pre;}
-  .c-comment{color:var(--muted);}
-  .c-cmd{color:var(--amber-soft);}
-  .c-flag{color:var(--green);}
+  .code { margin: 0 0 12px; border: 1px solid var(--bli-border); border-radius: var(--radius); overflow: hidden; background: var(--bli-surface); }
+  .code-head { display: flex; align-items: center; justify-content: space-between; padding: 7px 10px 7px 12px; background: var(--bli-surface-2); border-bottom: 1px solid var(--bli-border); }
+  .code-head .lbl { font-family: var(--font-code); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--bli-muted); }
+  pre.block { margin: 0; padding: 13px 14px; overflow-x: auto; font-family: var(--font-code); font-size: 13px; line-height: 1.65; color: var(--bli-text); white-space: pre; }
+  .kw  { color: var(--bli-accent); }
+  .str { color: var(--bli-success); }
+  .com { color: var(--bli-muted); font-style: italic; }
+  /* copy = a bli ghost key */
+  .copy { font-family: var(--font-code); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; cursor: pointer;
+          background: transparent; color: var(--bli-muted); border: 1px solid var(--bli-border); border-radius: var(--radius-xs); padding: 3px 9px; }
+  .copy:hover { color: var(--bli-text); border-color: var(--bli-subtle); background: var(--bli-surface); }
+  .copy.done { color: var(--bli-success); border-color: var(--bli-success); }
 
-  /* callout */
-  .note{
-    border-left:3px solid var(--amber); background:rgba(230,162,60,.06);
-    padding:14px 18px; border-radius:0 8px 8px 0; margin:0 0 18px;
-    font-size:16px; color:var(--paper-dim);
-  }
-  .note b{color:var(--amber-soft);}
-  .note.green{border-color:var(--green); background:rgba(139,191,106,.07);}
-  .note.green b{color:var(--green);}
+  /* ── callout (bli card) ── */
+  .note { border: 1px solid var(--bli-border); border-left: 3px solid var(--bli-cta); background: var(--bli-surface); border-radius: var(--radius-sm); padding: 12px 16px; margin: 0 0 14px; font-family: var(--font-serif); font-size: 14px; color: var(--bli-text); }
+  .note.ok { border-left-color: var(--bli-success); }
+  .note b { color: var(--bli-text); }
 
-  /* skills table */
-  table{width:100%; border-collapse:collapse; margin:8px 0 0; font-size:16px;}
-  th,td{text-align:left; padding:13px 14px; border-bottom:1px solid var(--line); vertical-align:top;}
-  th{font-family:var(--mono); font-size:11.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--muted);}
-  td:first-child{font-family:var(--mono); font-size:13.5px; color:var(--amber-soft); white-space:nowrap;}
-  td:last-child{color:var(--paper-dim);}
+  /* ── tables ── */
+  table { width: 100%; border-collapse: collapse; margin: 4px 0; }
+  th, td { text-align: left; padding: 11px 12px; border-bottom: 1px solid var(--bli-border); vertical-align: top; font-size: 14px; }
+  th { font-family: var(--font-code); font-size: 10px; text-transform: uppercase; letter-spacing: .1em; color: var(--bli-muted); }
+  td { font-family: var(--font-serif); color: var(--bli-text); }
+  td.k { font-family: var(--font-code); color: var(--bli-cta); white-space: nowrap; font-size: 13px; }
 
-  /* tree */
-  .tree{font-family:var(--mono); font-size:13.5px; line-height:1.75; color:var(--paper-dim); white-space:pre; overflow-x:auto;}
-  .tree .d{color:var(--amber-soft);}
-  .tree .cm{color:var(--muted);}
+  /* ── tree ── */
+  .tree { font-family: var(--font-code); font-size: 12.5px; line-height: 1.8; color: var(--bli-text); white-space: pre; overflow-x: auto; background: var(--bli-surface); border: 1px solid var(--bli-border); border-radius: var(--radius); padding: 14px 16px; }
+  .tree .d { color: var(--bli-accent); }
+  .tree .cm { color: var(--bli-muted); }
 
-  footer{padding:50px 0 0; color:var(--muted); font-family:var(--mono); font-size:12.5px; letter-spacing:.06em;}
-
-  /* load animation */
-  .reveal{opacity:0; transform:translateY(14px); animation:rise .7s cubic-bezier(.2,.7,.2,1) forwards;}
-  @keyframes rise{to{opacity:1; transform:none;}}
+  footer { padding: 26px 30px; font-family: var(--font-code); font-size: 11px; color: var(--bli-subtle); background: var(--bli-surface-2); border-top: 1px solid var(--bli-border); }
+  footer .slash { color: var(--bli-cta); }
 </style>
 </head>
 <body>
-<div class="wrap">
+<div class="shell">
+<div class="window">
 
-  <header>
-    <div class="kicker reveal" style="animation-delay:.02s">Agent skills · install walkthrough</div>
-    <h1 class="reveal" style="animation-delay:.08s"><span class="slash">/</span>skills</h1>
-    <p class="lede reveal" style="animation-delay:.16s">A standalone set of agent skills. Pull them straight from GitHub, or add them as a Claude Code plugin. Pick a path below.</p>
-    <div class="badges reveal" style="animation-delay:.24s">
-      <span class="badge yes">✓ Agent Skills spec</span>
-      <span class="badge yes">✓ GitHub-hosted</span>
-      <span class="badge yes">✓ Codex &amp; Claude</span>
-      <span class="badge no">✗ no npm</span>
-      <span class="badge no">✗ no third-party installer</span>
-    </div>
-  </header>
+  <!-- titlebar -->
+  <div class="titlebar">
+    <span class="dot"></span>
+    <span class="fname">skills · INSTALL.html</span>
+    <span class="controls"><span>&#8211;</span><span>&#9633;</span><span>&#10005;</span></span>
+  </div>
 
-  <!-- WHAT -->
-  <section>
-    <h2>00 — What you're installing</h2>
-    <p class="h2sub">A skill is just a folder.</p>
-    <p>Every skill in this repo is a self-contained folder under <code>skills/</code> with a <code>SKILL.md</code> inside (plus any <code>references/</code> or <code>assets/</code> it needs). Your agent reads that folder and gains the workflow.</p>
-    <p>Because a skill is only files, there's nothing to compile and nothing to run from a registry. The two automated paths below just move these folders into the place your agent already looks — and you can always do it by hand.</p>
-    <div class="note">Skills are read from <b>~/.agents/skills/</b> (Codex and other agents using that convention) or <b>~/.claude/skills/</b> (Claude Code's own folder). Claude Code can <i>also</i> consume this repo as a plugin, which is Path A.</div>
-    <div class="note green">Every skill here conforms to the open <a href="https://agentskills.io/specification">Agent Skills specification</a> and is validated in CI with <code>skills-ref</code>. That's the standard the "copy into any agent" promise rests on — <b>any compliant agent reads the same folder.</b></div>
-  </section>
+  <!-- menubar / nav -->
+  <nav class="menubar">
+    <a href="#install">Install</a>
+    <a href="#verify">Verify</a>
+    <a href="#skills">Skills</a>
+    <a href="#layout">Layout</a>
+    <span class="kbd">brandtam/skills</span>
+  </nav>
 
-  <!-- DECISION -->
-  <section>
-    <h2>01 — Which path is yours</h2>
-    <p class="h2sub">Two questions, then go.</p>
-    <div class="flow">
-      <div class="flow-q"><b>Q.</b> Which agent are you setting up?</div>
-      <div class="branches">
-        <div class="branch">
-          <div class="tool">▸ Claude Code</div>
-          <div class="arrow">│<br>▼</div>
-          <div class="dest">Path A <span class="tag">marketplace</span><br><span style="font-size:14px;color:var(--paper-dim)">native <code>/plugin</code> install — or use Path B</span></div>
-        </div>
-        <div class="branch">
-          <div class="tool">▸ Codex / anything reading ~/.agents/skills</div>
-          <div class="arrow">│<br>▼</div>
-          <div class="dest">Path B <span class="tag">git + install.sh</span><br><span style="font-size:14px;color:var(--paper-dim)">clone &amp; copy — or Path C by hand</span></div>
+  <div class="pane">
+
+    <!-- hero -->
+    <header class="hero">
+      <div class="bli-eyebrow">Agent skills · install walkthrough</div>
+      <div class="wordmark"><span class="slash">/</span>skills</div>
+      <p class="lede">Agent skills that follow the open Agent Skills spec — usable by Claude Code, Codex, and any compliant agent. Installed straight from GitHub, no npm. Pick a path below.</p>
+      <div class="badges">
+        <span class="bli-chip success">Agent Skills spec</span>
+        <span class="bli-chip info">GitHub-hosted</span>
+        <span class="bli-chip info">Codex &amp; Claude</span>
+        <span class="bli-chip cta">No npm</span>
+        <span class="bli-chip cta">No third-party installer</span>
+      </div>
+    </header>
+
+    <!-- what -->
+    <section>
+      <div class="bli-eyebrow">00 / what you're installing</div>
+      <h2>A skill is just a folder</h2>
+      <p>Every skill in this repo is a self-contained folder under <code>skills/</code> with a <code>SKILL.md</code> inside, plus any <code>references/</code> or <code>assets/</code> it needs. Your agent reads that folder and gains the workflow.</p>
+      <p>Because a skill is only files, there's nothing to compile and nothing to run from a registry. The two automated paths below just move these folders into the place your agent already looks — and you can always do it by hand.</p>
+      <div class="note">Skills are read from <b>~/.codex/skills/</b> (Codex CLI) or <b>~/.claude/skills/</b> (Claude Code). A shared <b>~/.agents/skills/</b> store can be symlinked into either, so one copy serves both. Claude Code can also consume this repo as a plugin — that's path A.</div>
+      <div class="note ok">Every skill here conforms to the open <a href="https://agentskills.io/specification">Agent Skills specification</a> and is validated in CI with <code>skills-ref</code>. That's the standard the copy-into-any-agent promise rests on — any compliant agent reads the same folder.</div>
+    </section>
+
+    <!-- decision -->
+    <section>
+      <div class="bli-eyebrow">01 / which path is yours</div>
+      <h2>Two questions, then go</h2>
+      <div class="flow">
+        <div class="q"><b>Q.</b> Which agent are you setting up?</div>
+        <div class="branches">
+          <div class="branch">
+            <div class="tool">▸ Claude Code</div>
+            <div class="down">│<br>▼</div>
+            <div class="dest">Path A — marketplace</div>
+            <div class="sub">native <code>/plugin</code> install, or use path B</div>
+          </div>
+          <div class="branch">
+            <div class="tool">▸ Codex / any spec-compatible agent</div>
+            <div class="down">│<br>▼</div>
+            <div class="dest">Path B — git + install.sh</div>
+            <div class="sub">clone and copy, or path C by hand</div>
+          </div>
         </div>
       </div>
-    </div>
-    <p style="margin-top:22px; color:var(--muted); font-size:15px;">Every path is pure GitHub + git. None of them download or execute an npm package.</p>
-  </section>
+      <p class="bli-muted" style="font-family:var(--font-code); font-size:12px; margin-top:14px;">Every path is pure GitHub + git. None of them download or execute an npm package.</p>
+    </section>
 
-  <!-- PREREQS -->
-  <section>
-    <h2>02 — Before you start</h2>
-    <p class="h2sub">Short list.</p>
-    <table>
-      <tr><th>For</th><th>You need</th></tr>
-      <tr><td>Path A</td><td>Claude Code installed and signed in. That's it — it fetches the repo itself.</td></tr>
-      <tr><td>Path B / C</td><td><code>git</code>, plus a Bash-capable shell (macOS/Linux ship one; on Windows use Git Bash or WSL).</td></tr>
-    </table>
-  </section>
+    <!-- prereqs -->
+    <section>
+      <div class="bli-eyebrow">02 / before you start</div>
+      <h2>Short list</h2>
+      <table>
+        <tr><th>For</th><th>You need</th></tr>
+        <tr><td class="k">Path A</td><td>Claude Code installed and signed in. That's it — it fetches the repo itself.</td></tr>
+        <tr><td class="k">Path B / C</td><td><code>git</code>, plus a Bash-capable shell. macOS and Linux ship one; on Windows use Git Bash or WSL.</td></tr>
+      </table>
+    </section>
 
-  <!-- PATH A -->
-  <section>
-    <h2>Path A — Claude Code marketplace</h2>
-    <p class="h2sub">Native, auto-updating, Claude only.</p>
+    <!-- path A -->
+    <section id="install">
+      <div class="bli-eyebrow">Path A / Claude Code marketplace</div>
+      <h2>Native, auto-updating, Claude only</h2>
 
-    <div class="step">
-      <div class="num">1</div>
-      <div class="body">
-        <h4>Register the marketplace</h4>
-        <p>Run this inside Claude Code. It clones the repo from GitHub and reads its plugin catalog — no npm, no registry.</p>
-        <div class="code">
-          <div class="code-head"><span class="label">in Claude Code</span><button class="copy" data-copy="/plugin marketplace add brandtam/skills">Copy</button></div>
-          <pre><code><span class="c-cmd">/plugin marketplace add</span> brandtam/skills</code></pre>
+      <div class="step">
+        <div class="num">1</div>
+        <div class="work">
+          <h3>Register the marketplace</h3>
+          <p>Run this inside Claude Code. It clones the repo from GitHub and reads its plugin catalog — no npm, no registry.</p>
+          <div class="code">
+            <div class="code-head"><span class="lbl">in Claude Code</span><button class="copy" data-copy="/plugin marketplace add brandtam/skills">copy</button></div>
+            <pre class="block"><span class="kw">/plugin marketplace add</span> brandtam/skills</pre>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="step">
-      <div class="num">2</div>
-      <div class="body">
-        <h4>Install the plugin</h4>
-        <p>The repo ships as a single plugin named <code>brandt-skills</code> in a marketplace named <code>brandt</code>. Installing it brings in <strong>all five skills at once</strong>.</p>
-        <div class="code">
-          <div class="code-head"><span class="label">in Claude Code</span><button class="copy" data-copy="/plugin install brandt-skills@brandt">Copy</button></div>
-          <pre><code><span class="c-cmd">/plugin install</span> brandt-skills@brandt</code></pre>
+      <div class="step">
+        <div class="num">2</div>
+        <div class="work">
+          <h3>Install the plugin</h3>
+          <p>The repo ships as a single plugin named <code>brandt-skills</code> in a marketplace named <code>brandt</code>. Installing it brings in all five skills at once.</p>
+          <div class="code">
+            <div class="code-head"><span class="lbl">in Claude Code</span><button class="copy" data-copy="/plugin install brandt-skills@brandt">copy</button></div>
+            <pre class="block"><span class="kw">/plugin install</span> brandt-skills@brandt</pre>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="step">
-      <div class="num">3</div>
-      <div class="body">
-        <h4>Confirm</h4>
-        <p>Open the plugin menu to see it listed and enabled. The skills are now available to Claude by name (e.g. ask it to "write a commit" or type the skill's slash command).</p>
-        <div class="code">
-          <div class="code-head"><span class="label">in Claude Code</span><button class="copy" data-copy="/plugin">Copy</button></div>
-          <pre><code><span class="c-cmd">/plugin</span></code></pre>
+      <div class="step">
+        <div class="num">3</div>
+        <div class="work">
+          <h3>Confirm</h3>
+          <p>Open the plugin menu to see it listed and enabled. The skills are now available to Claude by name, or via each skill's slash command.</p>
+          <div class="code">
+            <div class="code-head"><span class="lbl">in Claude Code</span><button class="copy" data-copy="/plugin">copy</button></div>
+            <pre class="block"><span class="kw">/plugin</span></pre>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="note green"><b>Updating later:</b> re-running <code>/plugin marketplace add brandtam/skills</code> refreshes the catalog; Claude Code pulls the latest from GitHub. To remove it, use the <code>/plugin</code> menu and uninstall <code>brandt-skills</code>.</div>
-  </section>
+      <div class="note ok"><b>Updating later:</b> re-run <code>/plugin marketplace add brandtam/skills</code> to refresh the catalog; Claude Code pulls the latest from GitHub. To remove it, open the <code>/plugin</code> menu and uninstall <code>brandt-skills</code>.</div>
+    </section>
 
-  <!-- PATH B -->
-  <section>
-    <h2>Path B — git clone + install.sh</h2>
-    <p class="h2sub">Cross-tool. Works for Codex and for Claude.</p>
+    <!-- path B -->
+    <section>
+      <div class="bli-eyebrow">Path B / git clone + install.sh</div>
+      <h2>Cross-tool — works for Codex and for Claude</h2>
 
-    <div class="step">
-      <div class="num">1</div>
-      <div class="body">
-        <h4>Clone the repo</h4>
-        <p>A normal git clone. The skills are right there in <code>skills/</code> for you to inspect before anything is installed.</p>
-        <div class="code">
-          <div class="code-head"><span class="label">terminal</span><button class="copy" data-copy="git clone https://github.com/brandtam/skills.git
-cd skills">Copy</button></div>
-          <pre><code><span class="c-cmd">git clone</span> https://github.com/brandtam/skills.git
-<span class="c-cmd">cd</span> skills</code></pre>
+      <div class="step">
+        <div class="num">1</div>
+        <div class="work">
+          <h3>Clone the repo</h3>
+          <p>A normal git clone. The skills sit right there in <code>skills/</code> for you to inspect before anything is installed.</p>
+          <div class="code">
+            <div class="code-head"><span class="lbl">terminal</span><button class="copy" data-copy="git clone https://github.com/brandtam/skills.git
+cd skills">copy</button></div>
+            <pre class="block"><span class="kw">git clone</span> https://github.com/brandtam/skills.git
+<span class="kw">cd</span> skills</pre>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="step">
-      <div class="num">2</div>
-      <div class="body">
-        <h4>Run the installer</h4>
-        <p><code>install.sh</code> copies skill folders into <code>~/.agents/skills/</code>. It's plain Bash — it only reads the folders sitting next to it and copies them. Nothing is fetched or executed from the network.</p>
-        <div class="code">
-          <div class="code-head"><span class="label">install everything</span><button class="copy" data-copy="./install.sh">Copy</button></div>
-          <pre><code><span class="c-cmd">./install.sh</span></code></pre>
-        </div>
-        <div class="code">
-          <div class="code-head"><span class="label">or just the ones you want</span><button class="copy" data-copy="./install.sh write-commit prepare-release">Copy</button></div>
-          <pre><code><span class="c-cmd">./install.sh</span> write-commit prepare-release</code></pre>
-        </div>
-        <div class="code">
-          <div class="code-head"><span class="label">install into Claude's folder instead</span><button class="copy" data-copy="DEST=~/.claude/skills ./install.sh">Copy</button></div>
-          <pre><code><span class="c-flag">DEST=</span>~/.claude/skills <span class="c-cmd">./install.sh</span></code></pre>
+      <div class="step">
+        <div class="num">2</div>
+        <div class="work">
+          <h3>Run the installer</h3>
+          <p><code>install.sh</code> copies skill folders into <code>~/.agents/skills/</code>. It's plain Bash — it only reads the folders next to it and copies them. Nothing is fetched or executed from the network.</p>
+          <div class="code">
+            <div class="code-head"><span class="lbl">install everything</span><button class="copy" data-copy="./install.sh">copy</button></div>
+            <pre class="block"><span class="kw">./install.sh</span></pre>
+          </div>
+          <div class="code">
+            <div class="code-head"><span class="lbl">or just the ones you want</span><button class="copy" data-copy="./install.sh write-commit prepare-release">copy</button></div>
+            <pre class="block"><span class="kw">./install.sh</span> write-commit prepare-release</pre>
+          </div>
+          <div class="code">
+            <div class="code-head"><span class="lbl">target a specific agent's folder</span><button class="copy" data-copy="DEST=~/.codex/skills  ./install.sh    # Codex CLI
+DEST=~/.claude/skills ./install.sh    # Claude Code">copy</button></div>
+            <pre class="block"><span class="str">DEST=</span>~/.codex/skills  <span class="kw">./install.sh</span>    <span class="com"># Codex CLI</span>
+<span class="str">DEST=</span>~/.claude/skills <span class="kw">./install.sh</span>    <span class="com"># Claude Code</span></pre>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="step">
-      <div class="num">3</div>
-      <div class="body">
-        <h4>Reload your agent</h4>
-        <p>Restart Codex / Claude (or reload skills) so it re-scans the skills directory. The new skills are now available.</p>
+      <div class="step">
+        <div class="num">3</div>
+        <div class="work">
+          <h3>Reload your agent</h3>
+          <p>Restart Codex or Claude, or reload skills, so it re-scans the skills directory. The new skills are now available.</p>
+        </div>
       </div>
-    </div>
 
-    <div class="note green"><b>Updating later:</b> <code>git pull</code> inside the cloned folder, then run <code>./install.sh</code> again. It replaces each skill folder cleanly.</div>
-  </section>
+      <div class="note ok"><b>Updating later:</b> <code>git pull</code> inside the cloned folder, then run <code>./install.sh</code> again. It replaces each skill folder cleanly.</div>
+    </section>
 
-  <!-- PATH C -->
-  <section>
-    <h2>Path C — by hand</h2>
-    <p class="h2sub">No script. Just a copy.</p>
-    <p>If you'd rather not run a script at all, copy any single skill folder into your agent's skills directory. This is the most transparent option — you can read every file first.</p>
-    <div class="code">
-      <div class="code-head"><span class="label">terminal</span><button class="copy" data-copy="cp -R skills/write-commit ~/.agents/skills/">Copy</button></div>
-      <pre><code><span class="c-comment"># from inside the cloned repo, pick whichever skill you want</span>
-<span class="c-cmd">cp -R</span> skills/write-commit ~/.agents/skills/</code></pre>
-    </div>
-    <p>Swap <code>~/.agents/skills/</code> for <code>~/.claude/skills/</code> if you're feeding Claude Code directly. To remove a skill, delete its folder.</p>
-  </section>
+    <!-- path C -->
+    <section>
+      <div class="bli-eyebrow">Path C / by hand</div>
+      <h2>No script — just a copy</h2>
+      <p>If you'd rather not run a script at all, copy any single skill folder into your agent's skills directory. This is the most transparent option — you can read every file first.</p>
+      <div class="code">
+        <div class="code-head"><span class="lbl">terminal</span><button class="copy" data-copy="cp -R skills/write-commit ~/.codex/skills/">copy</button></div>
+        <pre class="block"><span class="com"># from inside the cloned repo, pick whichever skill you want</span>
+<span class="kw">cp -R</span> skills/write-commit ~/.codex/skills/</pre>
+      </div>
+      <p>Destination depends on your agent: <code>~/.codex/skills/</code> for Codex CLI, <code>~/.claude/skills/</code> for Claude Code, or a shared <code>~/.agents/skills/</code> store symlinked into either. To remove a skill, delete its folder.</p>
+    </section>
 
-  <!-- VERIFY -->
-  <section>
-    <h2>03 — Verify it took</h2>
-    <p class="h2sub">Trust, then check.</p>
-    <table>
-      <tr><th>Path</th><th>How to confirm</th></tr>
-      <tr><td>A</td><td><code>/plugin</code> in Claude Code lists <code>brandt-skills</code> as enabled.</td></tr>
-      <tr><td>B / C</td><td><code>ls ~/.agents/skills</code> shows the skill folders, each containing a <code>SKILL.md</code>.</td></tr>
-    </table>
-    <div class="code" style="margin-top:18px;">
-      <div class="code-head"><span class="label">terminal — list installed skills</span><button class="copy" data-copy="ls -1 ~/.agents/skills">Copy</button></div>
-      <pre><code><span class="c-cmd">ls -1</span> ~/.agents/skills</code></pre>
-    </div>
-  </section>
+    <!-- verify -->
+    <section id="verify">
+      <div class="bli-eyebrow">03 / verify it took</div>
+      <h2>Trust, then check</h2>
+      <table>
+        <tr><th>Path</th><th>How to confirm</th></tr>
+        <tr><td class="k">A</td><td><code>/plugin</code> in Claude Code lists <code>brandt-skills</code> as enabled.</td></tr>
+        <tr><td class="k">B / C</td><td><code>ls</code> the folder you installed into, e.g. <code>~/.codex/skills</code>, shows each skill with its <code>SKILL.md</code>.</td></tr>
+      </table>
+      <div class="code" style="margin-top:14px;">
+        <div class="code-head"><span class="lbl">terminal — list installed skills</span><button class="copy" data-copy="ls -1 ~/.codex/skills">copy</button></div>
+        <pre class="block"><span class="kw">ls -1</span> ~/.codex/skills</pre>
+      </div>
+    </section>
 
-  <!-- SKILLS -->
-  <section>
-    <h2>04 — What's in the box</h2>
-    <p class="h2sub">Five skills.</p>
-    <table>
-      <tr><th>Skill</th><th>What it does</th></tr>
-      <tr><td>prepare-release</td><td>Cut a release from pending changesets — preview the next version, generate the changelog, archive consumed notes, stage tag / GitHub Release steps.</td></tr>
-      <tr><td>write-change-set</td><td>Write or update a changeset file for a PR or branch, scaffolding the changeset workflow if it's missing.</td></tr>
-      <tr><td>write-commit</td><td>Generate structured commit messages and optionally commit — honors repo commit templates, requires your approval before committing.</td></tr>
-      <tr><td>uat</td><td>Run a user-acceptance-testing session: collect observations, grill for decisions, then generate a PRD.</td></tr>
-      <tr><td>resurrect-project</td><td>Revive a dormant project — survey the code as historical signal, interview on today's intent, capture decisions, scaffold a rewrite plan.</td></tr>
-    </table>
-  </section>
+    <!-- skills -->
+    <section id="skills">
+      <div class="bli-eyebrow">04 / what's in the box</div>
+      <h2>Five skills</h2>
+      <table>
+        <tr><th>Skill</th><th>What it does</th></tr>
+        <tr><td class="k">prepare-release</td><td>Cut a release from pending changesets — version preview, changelog, archived notes, tag / GitHub Release steps.</td></tr>
+        <tr><td class="k">write-change-set</td><td>Write or update a changeset for a PR or branch, scaffolding the workflow if it's missing.</td></tr>
+        <tr><td class="k">write-commit</td><td>Generate structured commit messages and optionally commit — honors templates, requires your approval before committing.</td></tr>
+        <tr><td class="k">uat</td><td>Run a user-acceptance-testing session: collect observations, grill for decisions, then generate a PRD.</td></tr>
+        <tr><td class="k">resurrect-project</td><td>Revive a dormant project — survey the code as historical signal, interview on today's intent, scaffold a rewrite plan.</td></tr>
+      </table>
+    </section>
 
-  <!-- LAYOUT -->
-  <section style="border-bottom:0;">
-    <h2>05 — Repo layout</h2>
-    <p class="h2sub">So you know what you're cloning.</p>
-    <div class="tree"><span class="d">.claude-plugin/</span>
-  marketplace.json   <span class="cm"># catalog — lists this repo as one plugin (Path A)</span>
+    <!-- layout -->
+    <section id="layout">
+      <div class="bli-eyebrow">05 / repo layout</div>
+      <h2>So you know what you're cloning</h2>
+      <div class="tree"><span class="d">.claude-plugin/</span>
+  marketplace.json   <span class="cm"># catalog — lists this repo as one plugin (path A)</span>
   plugin.json        <span class="cm"># this repo IS the plugin; skills auto-discovered</span>
 <span class="d">skills/</span>
   <span class="d">prepare-release/</span>   SKILL.md  references/
@@ -379,37 +360,37 @@ cd skills">Copy</button></div>
   <span class="d">write-commit/</span>      SKILL.md
   <span class="d">uat/</span>               SKILL.md
   <span class="d">resurrect-project/</span> SKILL.md  flows/  references/  templates/
-install.sh           <span class="cm"># copies skills/* -> ~/.agents/skills (Path B, bash, no npm)</span>
+install.sh           <span class="cm"># copies skills/* into a skills dir (path B, bash, no npm)</span>
 validate.sh          <span class="cm"># checks skills against the Agent Skills spec (python, no npm)</span>
 <span class="d">.github/workflows/</span>   <span class="cm"># CI: runs spec validation on every push / PR</span>
 README.md  LICENSE  INSTALL.html</div>
-  </section>
+    </section>
 
-  <footer>
-    brandtam/skills · MIT · standalone — no npm, no third-party installer.<br>
-    Replace <span class="mono" style="color:var(--amber-soft)">brandtam/skills</span> with your own owner/repo if you forked it.
-  </footer>
+  </div><!-- /pane -->
 
-</div>
+  <footer>brandtam<span class="slash">/</span>skills · MIT · standalone — no npm, no third-party installer · styled with the bli design system · replace brandtam/skills with your own owner/repo if you forked it</footer>
+
+</div><!-- /window -->
+</div><!-- /shell -->
 
 <script>
   // Local, dependency-free copy buttons.
-  document.querySelectorAll('.copy').forEach(function(btn){
-    btn.addEventListener('click', function(){
+  document.querySelectorAll('.copy').forEach(function (btn) {
+    btn.addEventListener('click', function () {
       var text = btn.getAttribute('data-copy');
-      var done = function(){
+      var done = function () {
         var old = btn.textContent;
-        btn.textContent = 'Copied'; btn.classList.add('done');
-        setTimeout(function(){ btn.textContent = old; btn.classList.remove('done'); }, 1400);
+        btn.textContent = 'copied'; btn.classList.add('done');
+        setTimeout(function () { btn.textContent = old; btn.classList.remove('done'); }, 1400);
       };
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(text).then(done, fallback);
       } else { fallback(); }
-      function fallback(){
+      function fallback() {
         var ta = document.createElement('textarea');
-        ta.value = text; ta.style.position='fixed'; ta.style.opacity='0';
+        ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
         document.body.appendChild(ta); ta.select();
-        try { document.execCommand('copy'); done(); } catch(e){}
+        try { document.execCommand('copy'); done(); } catch (e) {}
         document.body.removeChild(ta);
       }
     });

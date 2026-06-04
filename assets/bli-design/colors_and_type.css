@@ -1,0 +1,394 @@
+/* =============================================================
+   bli design system — colors_and_type.css
+   The single source of truth for tokens. Drop in any HTML file
+   and the system applies.
+
+   Aesthetic direction: a retro-OS look — chiclet buttons, cream/dark
+   contrast, tight neutral palettes.
+   ============================================================= */
+
+/* =============================================================
+   BRAND FONTS — self-hosted in ./fonts (see fonts/README.md for
+   sources + licenses). No network needed: works offline and in
+   exports. Paths are relative to this file, so keep fonts/ next
+   to colors_and_type.css wherever you copy it.
+
+   ACTIVE brand faces (the four slots):
+     Michroma         — main: body / UI / headings        (--font-sans)
+     Orbitron (var)   — display accent: wordmark, heroes   (--font-mono-display)
+     Syne (var)       — code / labels / data               (--font-code)
+     Monaspace Xenon  — long-form / serif slot (slab mono) (--font-serif)
+
+   Recursive, IBM Plex Serif, and Commit Mono remain self-hosted as
+   fallbacks (and easy revert) but are no longer the assigned faces.
+   ============================================================= */
+
+/* --- Active faces --- */
+/* Michroma — single weight, wide geometric display used as the main face */
+@font-face { font-family: 'Michroma'; src: url('fonts/Michroma-Regular.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: swap; }
+/* Orbitron — variable, sci-fi geometric (display slot) */
+@font-face { font-family: 'Orbitron'; src: url('fonts/Orbitron-VF.woff2') format('woff2'); font-weight: 400 900; font-style: normal; font-display: swap; }
+/* Syne — variable, quirky display sans (code/label slot) */
+@font-face { font-family: 'Syne'; src: url('fonts/Syne-VF.woff2') format('woff2'); font-weight: 400 800; font-style: normal; font-display: swap; }
+
+/* --- Kept as fallbacks / quick revert --- */
+/* Recursive — one variable file carries every weight + the slnt/CASL/MONO axes */
+@font-face {
+    font-family: 'Recursive';
+    src: url('fonts/Recursive-VF.woff2') format('woff2');
+    font-weight: 300 1000;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* IBM Plex Serif — static weights */
+@font-face { font-family: 'IBM Plex Serif'; src: url('fonts/IBMPlexSerif-400.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: 'IBM Plex Serif'; src: url('fonts/IBMPlexSerif-500.woff2') format('woff2'); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: 'IBM Plex Serif'; src: url('fonts/IBMPlexSerif-600.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: swap; }
+@font-face { font-family: 'IBM Plex Serif'; src: url('fonts/IBMPlexSerif-700.woff2') format('woff2'); font-weight: 700; font-style: normal; font-display: swap; }
+
+/* Commit Mono — primary code/UI mono */
+@font-face { font-family: 'Commit Mono'; src: url('fonts/CommitMono-400.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Commit Mono'; src: url('fonts/CommitMono-700.woff2') format('woff2'); font-weight: 700; font-style: normal; font-display: swap; }
+
+/* Monaspace Xenon — display accent */
+@font-face { font-family: 'Monaspace Xenon'; src: url('fonts/MonaspaceXenon-Regular.woff') format('woff'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Monaspace Xenon'; src: url('fonts/MonaspaceXenon-Bold.woff') format('woff'); font-weight: 700; font-display: swap; }
+
+/* =============================================================
+   TOKENS — bli default palette (carbon base + tangerine accent)
+   Override any of these on any container to retheme a section.
+   ============================================================= */
+
+:root {
+    /* Surface */
+    --bli-bg:        #16171B;   /* page background */
+    --bli-surface:   #1F2025;   /* cards, panels */
+    --bli-surface-2: #2A2C33;   /* hover, raised surfaces */
+    --bli-border:    #3A3D49;   /* dividers, outlines */
+
+    /* Text */
+    --bli-text:      #EAECF6;   /* body */
+    --bli-muted:     #8B90A3;   /* labels, meta, placeholders */
+    --bli-subtle:    #5A5E6B;   /* very low emphasis */
+
+    /* Brand (the chiclet button + CTA) */
+    --bli-accent:    #FF8A3D;   /* button face */
+    --bli-shadow:    #D9651D;   /* button plaque (sits below the face) */
+    --bli-edge:      #A14A14;   /* button border */
+    --bli-cta:       #E84C00;   /* links, dot accents, highlights */
+    --bli-on-cta:    #16171B;   /* text on top of CTA fills */
+
+    /* Status — semantic, sparingly used */
+    --bli-success:   #36C46F;
+    --bli-warn:      #F7A501;
+    --bli-error:     #E84C00;
+    --bli-info:      #2F80FA;
+
+    /* Type — sci-fi set. Michroma is the main face (wide geometric display);
+       Orbitron is the display accent; Syne carries code/labels; Monaspace Xenon
+       (a slab-serif mono) fills the serif/long-form slot. The -vars below only
+       affected Recursive, so they're inert on these faces — kept for clean revert. */
+    --font-sans: "Michroma", "Recursive", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    --font-serif: "Monaspace Xenon", "IBM Plex Serif", Georgia, "Times New Roman", serif;
+    --font-code: "Syne", "Commit Mono", Menlo, Consolas, monospace;
+    --font-mono-display: "Orbitron", "Monaspace Xenon", "Recursive", monospace;
+
+    /* Variation defaults — inert on Michroma/Orbitron/Syne (they ignore these
+       axes); kept so reverting to the Recursive-based set is a one-line change. */
+    --font-sans-vars: "MONO" 0, "CASL" 0, "wght" 450, "slnt" 0;
+    --font-code-vars: "MONO" 1, "CASL" 0, "wght" 500, "slnt" 0;
+
+    /* Sizes */
+    --text-2xs:  0.625rem;  /* 10 */
+    --text-xs:   0.75rem;   /* 12 */
+    --text-sm:   0.875rem;  /* 14 */
+    --text-base: 1rem;      /* 16 */
+    --text-lg:   1.125rem;  /* 18 */
+    --text-xl:   1.25rem;   /* 20 - h3 */
+    --text-2xl:  1.5rem;    /* 24 - h2 */
+    --text-3xl:  1.75rem;   /* 28 - h1 */
+    --text-4xl:  2.25rem;   /* 36 - display */
+    --text-5xl:  3rem;      /* 48 */
+    --text-6xl:  4rem;      /* 64 - wordmark */
+
+    /* Tracking */
+    --tracking-tight: -0.015em;
+    --tracking-display: -0.025em;
+    --tracking-wide: 0.06em;
+
+    /* Radii */
+    --radius-xs: 2px;
+    --radius-sm: 4px;
+    --radius:    6px;   /* default — buttons, cards */
+    --radius-lg: 12px;
+    --radius-xl: 20px;
+    --radius-full: 9999px;
+
+    /* Spacing — Tailwind base + half-steps for chrome */
+    --space-1: 4px;
+    --space-2: 8px;
+    --space-3: 12px;
+    --space-4: 16px;
+    --space-5: 20px;
+    --space-6: 24px;
+    --space-8: 32px;
+    --space-12: 48px;
+
+    /* Highlight tint (selection, mark) */
+    --bli-highlight: rgba(255, 138, 61, 0.22);
+}
+
+/* =============================================================
+   LIGHT MODE — opt in with class="light" on <html> or any parent.
+   The Carbon palette is the default; this is the "Mango"-leaning
+   cream variant for surfaces that want light backgrounds.
+   ============================================================= */
+
+.light {
+    --bli-bg:        #FDFDF8;
+    --bli-surface:   #EEEFE9;
+    --bli-surface-2: #E5E7E0;
+    --bli-border:    #BFC1B7;
+
+    --bli-text:      #23251D;
+    --bli-muted:     #73756B;
+    --bli-subtle:    #9EA096;
+
+    /* Brand stays the same — readable on both modes */
+    --bli-on-cta:    #FFFFFF;
+}
+
+/* =============================================================
+   BASE — every page starts here
+   ============================================================= */
+
+* { box-sizing: border-box; }
+html, body { margin: 0; min-height: 100%; }
+body {
+    font-family: var(--font-sans);
+    font-variation-settings: var(--font-sans-vars);
+    color: var(--bli-text);
+    background: var(--bli-bg);
+    -webkit-font-smoothing: antialiased;
+    word-wrap: break-word;
+}
+
+code, pre, .bli-mono {
+    font-family: var(--font-code);
+    font-variation-settings: var(--font-code-vars);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    letter-spacing: var(--tracking-tight);
+    line-height: 1.15;
+    margin: 0 0 .5em;
+    text-wrap: balance;
+    color: var(--bli-text);
+}
+h1 { font-size: var(--text-3xl); }
+h2 { font-size: var(--text-2xl); }
+h3 { font-size: var(--text-xl); }
+h4 { font-size: var(--text-lg); }
+h5 { font-size: var(--text-base); }
+h6 { font-size: var(--text-sm); }
+
+p, li { font-size: var(--text-base); line-height: 1.65; }
+p { margin: 0 0 .75rem; }
+
+code {
+    font-family: var(--font-code);
+    font-weight: 500;
+    font-size: 0.875em;
+    border: 1px solid var(--bli-border);
+    background: var(--bli-surface);
+    border-radius: var(--radius-sm);
+    padding: 1px 5px;
+    color: var(--bli-text);
+}
+pre code { border: 0; background: transparent; padding: 0; }
+
+a { color: var(--bli-cta); text-decoration: underline; text-underline-offset: 2px; }
+a:hover { text-decoration: none; }
+
+::selection { background: var(--bli-highlight); color: var(--bli-text); }
+
+/* =============================================================
+   SEMANTIC TYPE CLASSES — friendly utilities
+   ============================================================= */
+
+.bli-display {
+    font-family: var(--font-sans);
+    font-size: var(--text-5xl);
+    font-weight: 800;
+    letter-spacing: var(--tracking-display);
+    line-height: 1.05;
+}
+.bli-wordmark {
+    font-family: var(--font-sans);
+    font-size: var(--text-6xl);
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    line-height: 1;
+}
+.bli-wordmark .dot { color: var(--bli-cta); }
+
+.bli-eyebrow {
+    font-family: var(--font-code);
+    font-variation-settings: var(--font-code-vars);
+    font-size: var(--text-xs);
+    color: var(--bli-muted);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+    font-weight: 600;
+}
+.bli-mono     { font-family: var(--font-code); font-variation-settings: var(--font-code-vars); }
+.bli-muted    { color: var(--bli-muted); }
+.bli-subtle   { color: var(--bli-subtle); }
+.bli-mark     { background: var(--bli-highlight); padding: 0 .15em; }
+
+/* =============================================================
+   THE bli BUTTON — the signature two-layer chiclet
+   Plaque underneath, face on top, face sits
+   −2px from its plaque. Hover lifts to −4px, press sinks to −1px.
+   ============================================================= */
+
+.bli-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bli-shadow);
+    border: 1.5px solid var(--bli-edge);
+    border-radius: var(--radius);
+    padding: 0;
+    cursor: pointer;
+    font-family: var(--font-sans);
+    color: #000;
+    user-select: none;
+    line-height: 1;
+    text-decoration: none;
+}
+.bli-btn > span {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    background: var(--bli-accent);
+    border: 1.5px solid var(--bli-edge);
+    border-radius: var(--radius);
+    margin: -1.5px;
+    padding: 8px 14px;
+    font-size: var(--text-sm);
+    font-weight: 700;
+    transform: translateY(-2px);
+    transition: transform 100ms cubic-bezier(.3, 1.4, .5, 1), filter 100ms ease;
+}
+/* Hover: the cap rises to meet the finger and catches a touch more light */
+.bli-btn:hover > span  { transform: translateY(-4px); filter: brightness(1.03); }
+/* Active: full down-stroke — the cap slams flush onto its base */
+.bli-btn:active > span { transform: translateY(0); filter: brightness(.98); transition-duration: 40ms; }
+
+.bli-btn.secondary > span { background: var(--bli-bg); color: var(--bli-text); }
+
+.bli-btn.sm > span { padding: 5px 10px; font-size: var(--text-xs); }
+.bli-btn.lg > span { padding: 10px 18px; font-size: var(--text-base); }
+
+/* =============================================================
+   THE bli KEY — the tactile hardware chiclet (refined in the AG-500R build)
+   A pressable key: a plaque base with a raised face that carries an inner
+   highlight. Rest sits −2px proud; hover rises to −4px; press slams flush
+   onto the base. Color comes from --face / --shadow / --edge / --ink,
+   defaulting to the tangerine brand. This is the bli button.
+   ============================================================= */
+.bli-key {
+    display: inline-flex; align-items: center; justify-content: center;
+    background: var(--shadow, var(--bli-shadow));
+    border: 1.5px solid var(--edge, var(--bli-edge));
+    border-radius: 3px;
+    box-shadow: 0 2px 0 var(--edge, var(--bli-edge));
+    padding: 0; cursor: pointer; line-height: 1;
+    font-family: var(--font-code); font-variation-settings: var(--font-code-vars);
+    color: var(--ink, #1A0A00);
+    user-select: none; text-decoration: none;
+}
+.bli-key > span {
+    display: inline-flex; gap: 6px; align-items: center; justify-content: center;
+    background: var(--face, var(--bli-accent));
+    border: 1.5px solid var(--edge, var(--bli-edge));
+    border-radius: 2px;
+    margin: -1.5px;
+    padding: 7px 14px;
+    font-size: 13px; font-weight: 800; letter-spacing: 0.06em;
+    text-transform: uppercase;
+    box-shadow: inset 0 2px 0 rgba(255,255,255,.5), inset 0 -1px 0 rgba(0,0,0,.18);
+    transform: translateY(-2px);
+    transition: transform 100ms cubic-bezier(.3, 1.4, .5, 1), filter 100ms ease;
+}
+/* Hover: the cap rises to meet the finger and catches a touch more light */
+.bli-key:hover > span  { transform: translateY(-4px); filter: brightness(1.03); }
+/* Active: full down-stroke — the cap slams flush onto its base */
+.bli-key:active > span { transform: translateY(0); filter: brightness(.98); transition-duration: 40ms; }
+
+/* Color tints — the key palette we built for the AG-500R */
+.bli-key.tint-tangerine { --face: var(--bli-accent); --shadow: var(--bli-shadow); --edge: var(--bli-edge); --ink: #1A0A00; }
+.bli-key.tint-beige     { --face: #E8DDC2; --shadow: #6B5E48; --edge: #2A2419; --ink: #1A1408; }
+.bli-key.tint-cream     { --face: #F0E8D2; --shadow: #8C8266; --edge: #4A4232; --ink: #2B281F; }
+.bli-key.tint-black     { --face: #2A2A2D; --shadow: #050507; --edge: #050507; --ink: #EAECF6; }
+.bli-key.tint-gray      { --face: #B0AC9D; --shadow: #5E5A4E; --edge: #2C2A22; --ink: #1A1408; }
+
+/* Ghost — a flat key: no plaque, outline on hover, label only */
+.bli-key.ghost {
+    background: transparent; border-color: transparent; box-shadow: none;
+    color: var(--bli-muted);
+}
+.bli-key.ghost > span {
+    background: transparent; border-color: transparent; box-shadow: none;
+    color: inherit; transform: none;
+    transition: background 100ms ease, border-color 100ms ease, color 100ms ease;
+}
+.bli-key.ghost:hover > span  { background: var(--bli-surface-2); border-color: var(--bli-border); color: var(--bli-text); filter: none; }
+.bli-key.ghost:active > span { background: var(--bli-surface); transform: none; }
+.bli-key.ghost.active > span { background: var(--bli-surface-2); border-color: var(--bli-border); color: var(--bli-text); }
+
+/* Sizes */
+.bli-key.xs > span { padding: 4px 8px;   font-size: 10px; }
+.bli-key.sm > span { padding: 5px 10px;  font-size: 11px; }
+.bli-key.md > span { padding: 7px 13px;  font-size: 13px; }
+.bli-key.lg > span { padding: 9px 17px;  font-size: 15px; }
+.bli-key.xl > span { padding: 12px 22px; font-size: 17px; }
+
+/* =============================================================
+   THE bli CARD — flat, bordered, no shadow
+   ============================================================= */
+
+.bli-card {
+    background: var(--bli-surface);
+    border: 1px solid var(--bli-border);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+}
+.bli-card.flat { background: var(--bli-bg); }
+
+/* =============================================================
+   THE bli CHIP — small inline tag
+   ============================================================= */
+
+.bli-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-family: var(--font-code);
+    font-variation-settings: var(--font-code-vars);
+    font-size: var(--text-2xs);
+    padding: 1px 5px;
+    border-radius: var(--radius-xs);
+    border: 1px solid var(--bli-border);
+    color: var(--bli-text);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+}
+.bli-chip.cta     { border-color: var(--bli-cta);     color: var(--bli-cta); }
+.bli-chip.success { border-color: var(--bli-success); color: var(--bli-success); }
+.bli-chip.warn    { border-color: var(--bli-warn);    color: var(--bli-warn); }
+.bli-chip.info    { border-color: var(--bli-info);    color: var(--bli-info); }
