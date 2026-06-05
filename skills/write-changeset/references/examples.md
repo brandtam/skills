@@ -24,7 +24,7 @@ Run the changeset workflow for this PR.
 ---
 type: minor
 category: Added
-issue: #214
+link: "#214"
 ---
 
 Add saved dashboard filters so users can return to common report views.
@@ -39,7 +39,7 @@ Add saved dashboard filters so users can return to common report views.
 ---
 type: patch
 category: Fixed
-pr: #238
+link: "#238"
 ---
 
 Keep the settings dialog open after failed validation so users can correct invalid fields.
