@@ -48,7 +48,7 @@ cp -R skills/write-commit ~/.codex/skills/
 | Skill | Description |
 |-------|-------------|
 | [prepare-release](skills/prepare-release) | Cut a release from pending changesets — version preview, changelog, archived notes, tag / GitHub Release steps. |
-| [write-change-set](skills/write-change-set) | Write or update a changeset for a PR or branch, scaffolding the workflow if it's missing. |
+| [write-changeset](skills/write-changeset) | Write or update a changeset for a PR or branch, scaffolding the workflow if it's missing. |
 | [write-commit](skills/write-commit) | Generate structured commit messages and optionally commit, honoring templates and requiring approval. |
 | [uat](skills/uat) | Run a user-acceptance-testing session — collect observations, grill for decisions, generate a PRD. |
 | [resurrect-project](skills/resurrect-project) | Revive a dormant project — survey the code, interview on today's intent, scaffold a rewrite plan. |

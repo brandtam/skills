@@ -1,5 +1,5 @@
 ---
-name: write-change-set
+name: write-changeset
 description: Write or update a change set (changeset) file for a pull request or branch, and scaffold the repo-local changeset workflow when it is missing. Use when the user says to write, add, update, or run the change set or changeset for a PR/branch before merge.
 license: MIT
 metadata:
