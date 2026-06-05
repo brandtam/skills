@@ -14,6 +14,26 @@ Before scaffolding, inspect:
 
 Preserve existing conventions unless they are clearly incomplete.
 
+## Bundled CLI Assumptions
+
+The bundled `assets/cli/` is a starting point, not a universal drop-in. Inspect
+these before installing, adapt when the repo's conventions are clear, and ask
+only when compatibility requires a user choice:
+
+- **ES modules.** The CLI uses `import`/`export`. The target repo needs
+  `"type": "module"` for the installed script files. Prefer copying
+  `assets/cli/package.json` to `scripts/package.json`; this makes the scripts
+  subtree ESM without changing the repo root. If the repo does not allow nested
+  package metadata, rename the entrypoint, library, and test files to `.mjs`,
+  then update relative imports and package scripts.
+- **Base branch `origin/main`.** Branch-local validation (`changeset:check-pr`)
+  diffs against `origin/main`. Repos on `master`/`trunk`, a local-only default
+  branch, or CI with a different base must pass `--since <ref>` or change the
+  default, and need `git fetch` so the ref resolves.
+- **Tab-indented `package.json`.** `changeset:version` rewrites `package.json`
+  with tabs. In a two-space repo this produces a reformatting diff; adjust the
+  writer or reformat afterward.
+
 ## Default Install
 
 Install or adapt:
@@ -21,6 +41,7 @@ Install or adapt:
 - `.changeset/README.md`
 - `.changeset/released/.gitkeep`
 - `CHANGELOG.md` baseline when missing
+- `scripts/package.json`
 - `scripts/changesets.js`
 - `scripts/lib/changesets.js`
 - `scripts/lib/changesets.test.js`

@@ -6,7 +6,7 @@ Default pending changesets live directly under `.changeset/`:
 ---
 type: minor
 category: Added
-issue: #123
+link: "#123"
 ---
 
 Add saved dashboard filters so users can return to common report views.
@@ -19,7 +19,10 @@ Add saved dashboard filters so users can return to common report views.
 
 - `type`: required. Use `major`, `minor`, or `patch`.
 - `category`: optional when repo tooling has defaults. Prefer Keep a Changelog categories.
-- `issue` or `pr`: optional link or issue number.
+- `link`: optional. A PR, issue, or discussion link. Quote issue-number style
+  refs (`link: "#123"`) so the value is also valid YAML. The bundled CLI still
+  reads legacy `issue`/`pr` fields, but write `link` for new changesets and
+  migrate old fields to `link` when editing an existing changeset.
 
 The first body line is the changelog summary. Keep it short, concrete, and user-facing.
 

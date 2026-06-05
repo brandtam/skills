@@ -1,7 +1,7 @@
 ---
 type: minor
 category: Added
-issue:
+link:
 ---
 
 Describe the user-facing result in one sentence.

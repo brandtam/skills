@@ -38,7 +38,7 @@ Use this skill when the user wants the PR or branch to carry a changeset before 
 
 If the repo does not have a changeset workflow, stop and offer to scaffold it. Do not scaffold without user approval.
 
-When approved, read `references/scaffold-workflow.md` and use the bundled templates/assets if they fit the repo.
+When approved, read `references/scaffold-workflow.md` and use the bundled templates/assets if they fit the repo. Before installing the bundled CLI, inspect whether the target repo meets its assumptions (ES modules, an `origin/main` base branch, and tab-indented `package.json`), adapt when the right change is clear, and ask only when compatibility requires a user choice.
 
 ## References
 
