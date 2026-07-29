@@ -33,6 +33,9 @@ a repo-owned workflow triggered by `on: push: tags`.
 | `assets/workflows/release-on-tag.yml` | `.github/workflows/release-on-tag.yml` | **Optional** — offer it |
 | `assets/workflows/deploy-on-tag.yml` | `.github/workflows/deploy-on-tag.yml` | **Starter stub** — offer only if no tag-triggered workflow exists |
 
+The library's test suite lives at `tests/changesets.test.mjs` in this skill (run with
+`node --test`); it is not installed into target repos.
+
 Plus these `package.json` scripts (merge, don't clobber):
 
 ```json

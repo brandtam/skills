@@ -64,6 +64,13 @@ Check every skill against the spec before committing or releasing:
 
 It installs [`skills-ref`](https://github.com/agentskills/agentskills/tree/main/skills-ref) into a local `.venv` (Python, no npm) and validates each folder under `skills/`. The same check runs in CI on every push and PR.
 
+## Releases
+
+This repo dogfoods its own [setup-release-kit](skills/setup-release-kit): every PR carries a
+changeset in `.changeset/` (or the `skip-changeset` label), CI gates on it, and releases go
+through `npm run release` → merge → `npm run release:tag`. The scripts are zero-dependency —
+there is still nothing to `npm install`. Run the kit's tests with `npm test`.
+
 ## Layout
 
 ```
@@ -72,6 +79,8 @@ It installs [`skills-ref`](https://github.com/agentskills/agentskills/tree/main/
   plugin.json        # this repo IS the plugin; skills auto-discovered
 skills/
   <name>/SKILL.md    # one self-contained, spec-compliant folder per skill
+.changeset/          # pending release notes (one per PR)
+scripts/             # the release kit, installed by /setup-release-kit
 install.sh           # copy skills into a skills directory (bash, no npm)
 validate.sh          # validate skills against the Agent Skills spec
 .github/workflows/   # CI: runs validation on push/PR
