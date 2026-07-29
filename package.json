@@ -1,0 +1,17 @@
+{
+	"name": "brandtam-skills",
+	"version": "0.1.0",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"test": "node --test 'skills/setup-release-kit/tests/*.test.mjs'",
+		"changeset": "node scripts/changesets.mjs",
+		"changeset:add": "node scripts/changesets.mjs add",
+		"changeset:status": "node scripts/changesets.mjs status",
+		"changeset:check": "node scripts/changesets.mjs validate",
+		"changeset:check-pr": "node scripts/changesets.mjs validate --branch-only --require-pending",
+		"changeset:version": "node scripts/changesets.mjs version",
+		"release": "node scripts/release.mjs",
+		"release:tag": "node scripts/release-tag.mjs"
+	}
+}

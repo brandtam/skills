@@ -1,0 +1,75 @@
+# release-kit v1 — canonical source: brandtam/skills (skills/setup-release-kit)
+name: Changeset
+
+# Verifies every PR carries a changeset describing its user-facing result.
+# Bypass for test-only / refactor / docs PRs: apply the `skip-changeset` label.
+#
+# This job ALWAYS runs (even when skipped via label it exits 0), so it is safe to
+# mark as a required status check in branch protection without blocking label-skipped PRs.
+#
+# The validator (scripts/changesets.mjs) has zero dependencies, so no package-manager
+# install step is needed — this gate is identical in every repo regardless of pnpm/npm/bun.
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, labeled, unlabeled]
+
+permissions:
+  contents: read
+  pull-requests: read # read the PR's live labels (see "Check for skip-changeset label")
+
+# Do NOT cancel in-progress runs: this job is a required status check, and
+# `opened` + `labeled` (e.g. applying `skip-changeset`) can fire near-simultaneously.
+# Cancelling the earlier run leaves a `cancelled` conclusion on the required context,
+# which blocks the merge even after a later run succeeds. Each run reads the PR's live
+# labels (not the triggering event's frozen payload), so whichever run lands last
+# reaches the same verdict — no run can leave a stale red behind a later skip.
+concurrency:
+  group: changeset-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  changeset:
+    name: changeset present
+    runs-on: ubuntu-latest
+    steps:
+      # Read the PR's CURRENT labels via the API, not github.event.pull_request.labels.
+      # The event payload is a frozen snapshot: a PR opened with `--label skip-changeset`
+      # fires `opened` a beat before the label attaches, so that run sees no label and
+      # fails — and re-running it replays the same stale payload. Querying live labels
+      # makes every run (and every re-run) agree on the current state.
+      - name: Check for skip-changeset label
+        id: skip
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh pr view "${{ github.event.pull_request.number }}" \
+            --repo "${{ github.repository }}" --json labels \
+            --jq '.labels[].name' | grep -qx 'skip-changeset'; then
+            echo "skipped=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skipped=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/checkout@v5
+        if: steps.skip.outputs.skipped != 'true'
+        with:
+          # Full history + the base branch so `git diff origin/<base>...HEAD` resolves.
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v5
+        if: steps.skip.outputs.skipped != 'true'
+        with:
+          node-version: 22
+
+      - name: Fetch base branch
+        if: steps.skip.outputs.skipped != 'true'
+        run: git fetch --no-tags origin "${{ github.base_ref }}:refs/remotes/origin/${{ github.base_ref }}"
+
+      - name: Require a changeset
+        if: steps.skip.outputs.skipped != 'true'
+        run: node scripts/changesets.mjs validate --branch-only --require-pending --since "origin/${{ github.base_ref }}"
+
+      - name: Report skip
+        if: steps.skip.outputs.skipped == 'true'
+        run: echo "skip-changeset label present — changeset not required for this PR."

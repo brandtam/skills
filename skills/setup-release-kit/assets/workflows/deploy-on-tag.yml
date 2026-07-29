@@ -1,0 +1,39 @@
+# release-kit v1 — STARTER STUB, not part of the kit's contract.
+#
+# The release kit ends at the pushed tag `vX.Y.Z`. If this repo should deploy or publish
+# on release, THIS is where that belongs: a workflow triggered by the tag. Pick one of the
+# example jobs below (or write your own), then delete the rest — or delete this whole file
+# if the tag is all you need.
+name: Deploy
+
+on:
+  push:
+    tags: ['v*.*.*']
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      # ── Example A: Cloudflare Workers ────────────────────────────────────────────
+      # - uses: pnpm/action-setup@v6
+      # - uses: actions/setup-node@v5
+      #   with: { node-version: 22, cache: pnpm }
+      # - run: pnpm install --frozen-lockfile
+      # - run: pnpm exec wrangler deploy
+      #   env:
+      #     CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+
+      # ── Example B: npm publish ───────────────────────────────────────────────────
+      # - uses: actions/setup-node@v5
+      #   with: { node-version: 22, registry-url: 'https://registry.npmjs.org' }
+      # - run: npm ci && npm publish --provenance --access public
+      #   env:
+      #     NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Placeholder
+        run: echo "Replace this job with your repo's deploy/publish steps (see comments)."

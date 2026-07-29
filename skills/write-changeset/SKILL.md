@@ -1,6 +1,6 @@
 ---
 name: write-changeset
-description: Write or update a change set (changeset) file for a pull request or branch, and scaffold the repo-local changeset workflow when it is missing. Use when the user says to write, add, update, or run the change set or changeset for a PR/branch before merge.
+description: Write or update a change set (changeset) file for a pull request or branch. Use when the user says to write, add, update, or run the change set or changeset for a PR/branch before merge. If the repo has no changeset workflow, install it with setup-release-kit first.
 license: MIT
 metadata:
   version: "0.1.0"
@@ -36,12 +36,11 @@ Use this skill when the user wants the PR or branch to carry a changeset before 
 
 ## Missing Workflow
 
-If the repo does not have a changeset workflow, stop and offer to scaffold it. Do not scaffold without user approval.
-
-When approved, read `references/scaffold-workflow.md` and use the bundled templates/assets if they fit the repo. Before installing the bundled CLI, inspect whether the target repo meets its assumptions (ES modules, an `origin/main` base branch, and tab-indented `package.json`), adapt when the right change is clear, and ask only when compatibility requires a user choice.
+If the repo does not have a changeset workflow, stop and tell the user to install it with
+the `setup-release-kit` skill. That skill owns the canonical scripts, CI gate, and release
+tooling; this skill only writes notes into an installed workflow. Do not scaffold from here.
 
 ## References
 
 - For file format rules, read `references/changeset-format.md`.
-- For bootstrap instructions, read `references/scaffold-workflow.md`.
 - For prompt and output examples, read `references/examples.md`.
