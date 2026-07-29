@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+// release-kit v1 — canonical source: brandtam/skills (skills/setup-release-kit)
+// Copied verbatim into repos by /setup-release-kit. Do not customize per repo.
 
 import { existsSync } from 'node:fs';
 import { createInterface } from 'node:readline/promises';
@@ -9,23 +11,24 @@ import {
 	CHANGESET_TYPES,
 	consumeChangesetsAndBumpVersion,
 	createChangesetFile,
+	pmRun,
 	previewVersionBump,
 	slugify,
 	validatePendingChangesets
-} from './lib/changesets.js';
+} from './lib/changesets.mjs';
 
 const args = process.argv.slice(2);
 const command = args[0] ?? 'help';
+const PM = pmRun();
 
 function printHelp() {
 	process.stdout.write(`Changeset tools
 
 Usage:
-  pnpm changeset add
-  pnpm changeset status [--branch-only] [--since <ref>]
-  pnpm changeset validate [--branch-only] [--require-pending] [--since <ref>]
-  pnpm changeset version --dry-run
-  pnpm changeset version --yes
+  ${PM} changeset:add
+  ${PM} changeset:status [-- --branch-only --since <ref>]
+  ${PM} changeset:check-pr
+  ${PM} changeset:version [-- --dry-run | --yes]
 
 Lifecycle:
   Feature PRs add one .changeset/*.md file.
@@ -40,8 +43,7 @@ function hasFlag(flag) {
 function getOption(name, fallback) {
 	const index = args.indexOf(name);
 	if (index === -1) return fallback;
-	const value = args[index + 1];
-	return value && !value.startsWith('--') ? value : fallback;
+	return args[index + 1] ?? fallback;
 }
 
 function printValidationErrors(errors) {
@@ -73,8 +75,9 @@ async function addChangeset() {
 		const categoryAnswer = (
 			await rl.question(`Category (${CHANGELOG_CATEGORIES.join(', ')}): `)
 		).trim();
+		const area = (await rl.question('Area (optional grouping token, e.g. platform): ')).trim();
 		const summary = (await rl.question('Summary: ')).trim();
-		const link = (await rl.question('Link (PR, issue, optional): ')).trim();
+		const issue = (await rl.question('Issue or PR link (optional): ')).trim();
 		const bodyLines = [];
 
 		output.write('Details, one line at a time. Submit an empty line when done.\n');
@@ -84,7 +87,7 @@ async function addChangeset() {
 			bodyLines.push(line);
 		}
 
-		const defaultFilename = `${slugify(summary) || 'changeset'}.md`;
+		const defaultFilename = `${slugify(summary)}.md`;
 		const filenameAnswer = (await rl.question(`Filename (${defaultFilename}): `)).trim();
 		const filename = filenameAnswer || defaultFilename;
 		const category = categoryAnswer || undefined;
@@ -93,7 +96,8 @@ async function addChangeset() {
 			filename,
 			type,
 			category,
-			link,
+			area: area || undefined,
+			issue,
 			summary,
 			body: bodyLines.join('\n')
 		});
@@ -145,13 +149,6 @@ function status() {
 }
 
 function version() {
-	if (hasFlag('--branch-only') || args.includes('--since')) {
-		console.error(
-			'--branch-only and --since are not valid for version; releases consume every pending changeset.'
-		);
-		process.exit(1);
-	}
-
 	if (!hasFlag('--dry-run') && !hasFlag('--yes')) {
 		console.error('Refusing to mutate files without --yes. Use --dry-run to preview.');
 		process.exit(1);
@@ -179,9 +176,6 @@ function version() {
 try {
 	if (command === 'help' || command === '--help' || command === '-h') {
 		printHelp();
-	} else if (!existsSync('package.json')) {
-		console.error('Run this command from the repository root.');
-		process.exit(1);
 	} else if (command === 'add') {
 		await addChangeset();
 	} else if (command === 'validate') {
@@ -190,6 +184,9 @@ try {
 		status();
 	} else if (command === 'version') {
 		version();
+	} else if (!existsSync('package.json')) {
+		console.error('Run this command from the repository root.');
+		process.exit(1);
 	} else {
 		console.error(`Unknown command: ${command}`);
 		printHelp();

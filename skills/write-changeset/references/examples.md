@@ -54,5 +54,5 @@ I did not add a changeset. This branch only updates unit test coverage and does 
 ## Missing Workflow Response
 
 ```text
-This repo does not have a changeset workflow installed yet. I can scaffold the workflow, docs, CLI, tests, and PR template, then write the first changeset for this branch.
+This repo does not have a changeset workflow installed yet. Run the setup-release-kit skill to install it, then I can write the first changeset for this branch.
 ```
