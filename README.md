@@ -55,6 +55,17 @@ cp -R skills/write-commit ~/.codex/skills/
 | [uat](skills/uat) | Run a user-acceptance-testing session — collect observations, grill for decisions, generate a PRD. |
 | [resurrect-project](skills/resurrect-project) | Revive a dormant project — survey the code, interview on today's intent, scaffold a rewrite plan. |
 
+## Hooks
+
+[`hooks/`](hooks/) documents the Claude Code hooks I run. Unlike skills, these are
+**not installed** by `install.sh` or the plugin — a hook needs an entry merged into
+your personal `~/.claude/settings.json`, so each one ships as a script to copy plus
+notes on why it exists.
+
+| Hook | Event | Description |
+|------|-------|-------------|
+| [response-shape](hooks/response-shape) | `UserPromptSubmit` | Cap every reply at one decision and one question — the falsifiable version of "be concise". |
+
 ## Validate
 
 Check every skill against the spec before committing or releasing:
@@ -80,6 +91,8 @@ there is still nothing to `npm install`. Run the kit's tests with `npm test`.
   plugin.json        # this repo IS the plugin; skills auto-discovered
 skills/
   <name>/SKILL.md    # one self-contained, spec-compliant folder per skill
+hooks/
+  <name>/            # Claude Code hooks: documentation + script, not installed
 .changeset/          # pending release notes (one per PR)
 scripts/             # the release kit, installed by /setup-release-kit
 install.sh           # copy skills into a skills directory (bash, no npm)
